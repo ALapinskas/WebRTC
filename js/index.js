@@ -345,8 +345,6 @@ document.onreadystatechange = function () {
         hangupButton.addEventListener('click', hangup);//hangupAction);
 
         /////////////////////////////////////////////
-        console.log('process env:');
-        console.log(process.env);
         var room = 'foo';
         // Could prompt for room name:
         room = prompt('Enter room name:');
