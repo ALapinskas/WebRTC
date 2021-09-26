@@ -42,9 +42,9 @@ function sendMessage(message) {
 }
 
 function initateCall() {
-    callButton.disabled = true;
-    hangupButton.disabled = false;
     if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
+        callButton.disabled = true;
+        hangupButton.disabled = false;
         createPeerConnection();
         pc.addStream(localStream);
         isStarted = true;
@@ -52,6 +52,8 @@ function initateCall() {
         if (isInitiator) {
             startCall();
         }
+    } else if (isChannelReady === false) {
+        console.warn("Didn't receive a signaling server response. Please check you connection, and try again");
     }
 }
 function createPeerConnection() {
