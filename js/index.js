@@ -3,6 +3,7 @@
 let isChannelReady = false,
     isInitiator = false,
     isStarted = false,
+    socket,
     pc,
     startTime = null,
     localStream, 
@@ -24,8 +25,12 @@ const mediaConstraints = { video: true },
 function gotLocalMediaStream(mediaStream) {
     localVideo.srcObject = mediaStream;
     localStream = mediaStream;
+    sendMessage('got user media');
     console.log('Received local stream.');
     callButton.disabled = false;  // Enable call button.
+    if (isInitiator) {
+        startCall();
+    }
 }
 
 // Handles error by logging a message to the console.
@@ -210,16 +215,6 @@ function sendMessage(message) {
     socket.emit('message', message);
 }
 
-function gotStream(stream) {
-    console.log('Adding local stream.');
-    localStream = stream;
-    localVideo.srcObject = stream;
-    sendMessage('got user media');
-    if (isInitiator) {
-        startCall();
-    }
-}
-
 function startCall() {
     console.log('>>>>>>> startCall() ', isStarted, localStream, isChannelReady);
     if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
@@ -251,10 +246,10 @@ function handleIceCandidate(event) {
     console.log('icecandidate event: ', event);
     if (event.candidate) {
         sendMessage({
-        type: 'candidate',
-        label: event.candidate.sdpMLineIndex,
-        id: event.candidate.sdpMid,
-        candidate: event.candidate.candidate
+            type: 'candidate',
+            label: event.candidate.sdpMLineIndex,
+            id: event.candidate.sdpMid,
+            candidate: event.candidate.candidate
         });
     } else {
         console.log('End of candidates.');
@@ -344,9 +339,9 @@ document.onreadystatechange = function () {
         hangupButton.disabled = true;
 
         // Add click event handlers for buttons.
-        startButton.addEventListener('click', startAction);
-        callButton.addEventListener('click', callAction);
-        hangupButton.addEventListener('click', hangupAction);
+        startButton.addEventListener('click',  startAction);
+        callButton.addEventListener('click', startCall);//callAction);
+        hangupButton.addEventListener('click', hangup);//hangupAction);
 
         /////////////////////////////////////////////
 
@@ -356,7 +351,7 @@ document.onreadystatechange = function () {
 
         roomName.innerText = room;
 
-        var socket = io('https://alfa-webrtc-signaling.herokuapp.com'/*'http://localhost:9000'*/, {withCredentials: true});
+        socket = io(/*'https://alfsocketa-webrtc-signaling.herokuapp.com'*/'http://localhost:9000', {withCredentials: true});
 
         if (room !== '') {
             socket.emit('create or join', room);
@@ -415,6 +410,7 @@ document.onreadystatechange = function () {
 
         ////////////////////////////////////////////////////
 
+        /*
         navigator.mediaDevices.getUserMedia({
             audio: false,
             video: true
@@ -422,7 +418,7 @@ document.onreadystatechange = function () {
         .then(gotStream)
         .catch(function(e) {
             alert('getUserMedia() error: ' + e.name);
-        });
+        });*/
 
         window.onbeforeunload = function() {
             sendMessage('bye');
