@@ -53,20 +53,7 @@ io.sockets.on('connection', function(socket) {
     }
   });
 
-  socket.on('ipaddr', function() {
-    var ifaces = os.networkInterfaces();
-    clientLog('ipaddr request: ' + details.address);
-    for (var dev in ifaces) {
-      ifaces[dev].forEach(function(details) {
-        if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
-          socket.emit('ipaddr', details.address);
-          clientLog('ipaddr: ' + details.address);
-        }
-      });
-    }
-  });
-
-  socket.on('bye', function(){
+  socket.on('disconnect', function(){
     clientLog('received bye');
   });
 });

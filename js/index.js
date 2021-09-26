@@ -297,7 +297,7 @@ function handleRemoteStreamRemoved(event) {
 function hangup() {
     console.log('Hanging up.');
     stop();
-    sendMessage('bye');
+    sendMessage('disconnect');
 }
 
 function handleRemoteHangup() {
@@ -405,7 +405,7 @@ document.onreadystatechange = function () {
                     candidate: message.candidate
                 });
                 pc.addIceCandidate(candidate);
-            } else if (message === 'bye' && isStarted) {
+            } else if (message === 'disconnect' && isStarted) {
                 handleRemoteHangup();
             }
         });
@@ -423,7 +423,7 @@ document.onreadystatechange = function () {
         });*/
 
         window.onbeforeunload = function() {
-            sendMessage('bye');
+            sendMessage('disconnect');
         };
     }
 };
