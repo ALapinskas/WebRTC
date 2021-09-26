@@ -9,7 +9,8 @@ let isChannelReady = false,
     localStream, 
     remoteStream, 
     localPeerConnection, 
-    remotePeerConnection;
+    remotePeerConnection,
+    signalingServer = 'https://alfa-webrtc-signaling.herokuapp.com'/*'http://localhost:9000'*/;
 
 let startButton, 
     callButton, 
@@ -344,14 +345,15 @@ document.onreadystatechange = function () {
         hangupButton.addEventListener('click', hangup);//hangupAction);
 
         /////////////////////////////////////////////
-
+        console.log('process env:');
+        console.log(process.env);
         var room = 'foo';
         // Could prompt for room name:
         room = prompt('Enter room name:');
 
         roomName.innerText = room;
 
-        socket = io(/*'https://alfsocketa-webrtc-signaling.herokuapp.com'*/'http://localhost:9000', {withCredentials: true});
+        socket = io(signalingServer, {withCredentials: true});
 
         if (room !== '') {
             socket.emit('create or join', room);
