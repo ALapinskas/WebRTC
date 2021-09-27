@@ -29,7 +29,7 @@ function startAction() {
             sendMessage('got user media');
             callButton.disabled = false;
             if (isInitiator) {
-                initateCall();
+                initiateCall();
             }
         }).catch((err) => {
             console.error(err);
@@ -41,7 +41,7 @@ function sendMessage(message) {
     socket.emit('message', message);
 }
 
-function initateCall() {
+function initiateCall() {
     if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
         callButton.disabled = true;
         hangupButton.disabled = false;
@@ -149,7 +149,7 @@ document.onreadystatechange = function () {
         hangupButton.disabled = true;
 
         startButton.addEventListener('click',  startAction);
-        callButton.addEventListener('click', initateCall);
+        callButton.addEventListener('click', initiateCall);
         hangupButton.addEventListener('click', hangup);
 
         var room = 'default';
@@ -188,10 +188,10 @@ document.onreadystatechange = function () {
         socket.on('message', function(message) {
             console.log('SERVER SIGNALING: Client received message:', message);
             if (message === 'got user media') {
-                initateCall();
+                initiateCall();
             } else if (message.type === 'offer') {
                 if (!isInitiator && !isStarted) {
-                    initateCall();
+                    initiateCall();
                 }
                 pc.setRemoteDescription(new RTCSessionDescription(message));
                 createAnswer();
