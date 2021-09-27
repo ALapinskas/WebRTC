@@ -185,6 +185,10 @@ document.onreadystatechange = function () {
             isChannelReady = true;
         });
 
+        socket.on('log', function(array) {
+            console.log.apply(console, array);
+        });
+
         socket.on('message', function(message) {
             console.log('SERVER SIGNALING: Client received message:', message);
             if (message === 'got user media') {
