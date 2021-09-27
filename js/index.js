@@ -53,7 +53,7 @@ function initiateCall() {
             startCall();
         }
     } else if (isChannelReady === false) {
-        console.warn("Didn't receive a signaling server response. Please check you connection, and try again");
+        console.warn("Didn't received signaling server response, yet. Probably there is no other participants to start the call.");
     }
 }
 function createPeerConnection() {
