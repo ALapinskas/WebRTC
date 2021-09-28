@@ -32,12 +32,20 @@ function startAction() {
                 initiateCall();
             }
         }).catch((err) => {
-            console.error(err);
+            if(err.name === "NotFoundError") {
+                console.error("cannot find video device");
+                alert("cannot find video device");
+            } else if(err.name === "NotAllowedError" || err.name === "NotReadableError"){
+                console.error("cannot access to video device");
+                alert("cannot access to video device");
+            } else {
+                console.error("Error getting media devices: " + err.name + ", " + err.code);
+                alert("unknown error");
+            }
         });
 }
 
 function sendMessage(message) {
-    console.log('Client sending message: ', message);
     socket.emit('message', message);
 }
 
@@ -53,7 +61,7 @@ function initiateCall() {
             startCall();
         }
     } else if (isChannelReady === false) {
-        console.warn("Didn't received signaling server response, yet. Probably there is no other participants to start the call.");
+        console.warn("Didn't received signaling server response, yet. Probably there is no other participants to start the call, or signaling server is down.");
     }
 }
 function createPeerConnection() {
