@@ -54,7 +54,9 @@ function initiateCall() {
         callButton.disabled = true;
         hangupButton.disabled = false;
         createPeerConnection();
-        pc.addStream(localStream);
+        for (const track of localStream.getTracks()) {
+            pc.addTrack(track, localStream);
+        }
         isStarted = true;
         console.log('isInitiator', isInitiator);
         if (isInitiator) {
@@ -68,7 +70,7 @@ function createPeerConnection() {
     try {
         pc = new RTCPeerConnection(null);
         pc.onicecandidate = handleIceCandidate;
-        pc.onaddstream = handleRemoteStreamAdded;
+        pc.ontrack = handleRemoteStreamAdded;
         pc.onremovestream = handleRemoteStreamRemoved;
     } catch (e) {
         alert('Cannot create RTCPeerConnection object.');
@@ -114,8 +116,16 @@ function onCreateSessionDescriptionError(error) {
 }
 
 function handleRemoteStreamAdded(event) {
-    remoteStream = event.stream;
-    remoteVideo.srcObject = remoteStream;
+    console.log('handle remote stream added');
+    console.log(event);
+    if (event.streams && event.streams[0]) {
+        remoteStream = event.streams[0];
+        remoteVideo.srcObject = event.streams[0];
+    } else {
+        let inboundStream = new MediaStream(event.track);
+        remoteVideo.srcObject = inboundStream;
+        remoteStream = inboundStream;
+    }
 }
 
 function handleRemoteStreamRemoved(event) {
@@ -202,9 +212,13 @@ document.onreadystatechange = function () {
             if (message === 'got user media') {
                 initiateCall();
             } else if (message.type === 'offer') {
+                if (localStream === undefined && !isStarted) {
+                    createPeerConnection();
+                }
                 if (!isInitiator && !isStarted) {
                     initiateCall();
                 }
+                
                 pc.setRemoteDescription(new RTCSessionDescription(message));
                 createAnswer();
             } else if (message.type === 'answer' && isStarted) {
