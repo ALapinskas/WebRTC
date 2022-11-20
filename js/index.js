@@ -8,14 +8,15 @@ let isChannelReady = false,
     startTime = null,
     localStream, 
     remoteStream,
-    signalingServer = 'https://alfa-webrtc-signaling.herokuapp.com'/*'http://localhost:9000'*/;
+    signalingServer = 'https://webrtc-server.1090103-cq86606.tmweb.ru:9009'/*'http://localhost:9000'*/;
 
 let startButton, 
     callButton, 
     hangupButton, 
     localVideo,
     remoteVideo,
-    roomName;
+    roomName,
+    serviceMessages;
 
 const mediaConstraints = { video: true },
         offerOptions     = { offerToReceiveVideo: 1 };
@@ -71,7 +72,7 @@ function createPeerConnection() {
         pc = new RTCPeerConnection(null);
         pc.onicecandidate = handleIceCandidate;
         pc.ontrack = handleRemoteStreamAdded;
-        pc.onremovestream = handleRemoteStreamRemoved;
+        pc.onremovetrack = handleRemoteStreamRemoved;
     } catch (e) {
         alert('Cannot create RTCPeerConnection object.');
         return;
@@ -163,6 +164,7 @@ document.onreadystatechange = function () {
         localVideo = document.querySelector('#localVideo');
         remoteVideo = document.querySelector('#remoteVideo');
 
+        serviceMessages = document.getElementById('service_messages');
         callButton.disabled = true;
         hangupButton.disabled = true;
 

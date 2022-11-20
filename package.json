@@ -4,15 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "client": "http-server -S -C cert.pem"
+    "start": "node index.js"
   },
   "author": "Arturas-Alfredas Lapinskas",
   "license": "ISC",
   "dependencies": {
     "socket.io": "4.2.0"
   },
-  "devDependencies": {
-    "http-server": "13.0.2"
-  }
 }

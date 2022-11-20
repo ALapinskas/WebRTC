@@ -1,10 +1,8 @@
-# WebRTC. WebRTC demonstration client + Signaling server
+# WebRTC. WebRTC demonstration client
 
-1. Generate keys
-openssl req -newkey rsa:2048 -new -nodes -x509 -days 365 -keyout key.pem -out cert.pem
-2. Choose path for your signaling server in js/index.js setting signalingServer variable. 
-To use local signaling server(./index.js) set http://localhost:9000, and run: npm start, in separate window,
-to start signaling server locally.
+1. Choose path for your signaling server in js/index.js setting signalingServer variable. 
+2. For signaling use this repo: https://github.com/ALapinskas/gameserver,
+    !webRTC connection works only with https, so you will have to install and attach certificates
 3. Run webRTC client: npm start client
 
-4. Client also available on https://webrtc.webtm.ru/
+4. Client also available here: https://webrtc.tw1.ru
