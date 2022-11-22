@@ -4,5 +4,3 @@
 2. For signaling use this repo: https://github.com/ALapinskas/gameserver,
     !webRTC connection works only with https, so you will have to install and attach certificates
 3. Run webRTC client: npm start client
-
-4. Client also available here: https://webrtc.tw1.ru
